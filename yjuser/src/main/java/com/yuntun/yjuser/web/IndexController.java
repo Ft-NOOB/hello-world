@@ -14,7 +14,7 @@ import com.yuntun.yjuser.utils.AlidayuUtil;
 import com.yuntun.yjuser.utils.MailUtil;
 
 @Controller
-public class IndexController {
+public class IndexController extends BaseController {
 	@Autowired
 	private UserService userService;
 	

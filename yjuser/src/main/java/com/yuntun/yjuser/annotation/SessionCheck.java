@@ -9,7 +9,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -39,18 +38,16 @@ public @interface SessionCheck {
 	
 	 public static class Validator implements ConstraintValidator<SessionCheck, String> {
 		@Autowired
-		private HttpServletRequest httpServletRequest;
-		private String sessionName;
+		private HttpSession httpSession;
+		private String sessionValue;
 
 		@Override
 		public void initialize(SessionCheck constraintAnnotation) {
-			sessionName = constraintAnnotation.value();
+			sessionValue = (String) httpSession.getAttribute(constraintAnnotation.value());
 		}
 
 		@Override
 		public boolean isValid(String value, ConstraintValidatorContext context) {
-			HttpSession httpSession = httpServletRequest.getSession();
-			String sessionValue = (String) httpSession.getAttribute(sessionName);
 			if(value.equals(sessionValue)) {
 				return true;
 			}

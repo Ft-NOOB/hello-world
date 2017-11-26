@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yuntun.utils.MyPage;
 
-public class BaseDao<T> {
+public abstract class BaseDao<T> {
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	private Class<T> clazz;
@@ -73,6 +73,17 @@ public class BaseDao<T> {
 	@SuppressWarnings("unchecked")
 	public List<T> findAllByCriteria(final DetachedCriteria detachedCriteria) {
 		return (List<T>) detachedCriteria.getExecutableCriteria(getSession());
+	}
+	
+	public int getCountByCriteria(final DetachedCriteria detachedCriteria) {
+		Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
+		Object object = criteria.setProjection(Projections.rowCount()).uniqueResult();
+		int totalCount = 0;
+		try {
+			totalCount = (Integer) object;
+		} catch (Exception e) {
+		}
+		return totalCount;
 	}
 	
 	/**
